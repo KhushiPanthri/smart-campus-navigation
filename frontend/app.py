@@ -1,3 +1,4 @@
+
 import streamlit as st
 import sys
 import os
@@ -11,8 +12,7 @@ sys.path.append(
 from algorithms import find_shortest_route, search_locations
 from data import locations
 from graph import graph
-
-
+from campus_map import display_campus_map
 
 
 # --------------------------------------------------
@@ -24,6 +24,20 @@ st.set_page_config(
     page_icon="🏫",
     layout="wide"
 )
+
+
+# --------------------------------------------------
+# SESSION STATE
+# --------------------------------------------------
+
+if "route" not in st.session_state:
+    st.session_state.route = None
+
+if "distance" not in st.session_state:
+    st.session_state.distance = None
+
+if "route_error" not in st.session_state:
+    st.session_state.route_error = None
 
 
 # --------------------------------------------------
@@ -91,7 +105,6 @@ search_term = st.sidebar.text_input(
     placeholder="Example: Library"
 )
 
-
 if search_term:
 
     search_results = search_locations(
@@ -106,16 +119,10 @@ if search_term:
         )
 
         for location in search_results:
-
-            st.sidebar.write(
-                f"📍 **{location}**"
-            )
+            st.sidebar.write(f"📍 **{location}**")
 
     else:
-
-        st.sidebar.warning(
-            "No matching location found."
-        )
+        st.sidebar.warning("No matching location found.")
 
 
 # --------------------------------------------------
@@ -126,20 +133,15 @@ st.subheader("📍 Find Your Route")
 
 location_names = list(locations.keys())
 
-
 col1, col2 = st.columns(2)
 
-
 with col1:
-
     start = st.selectbox(
         "Starting Location",
         location_names
     )
 
-
 with col2:
-
     destination = st.selectbox(
         "Destination",
         location_names,
@@ -156,9 +158,14 @@ if st.button(
     use_container_width=True
 ):
 
+    # Clear previous result
+    st.session_state.route = None
+    st.session_state.distance = None
+    st.session_state.route_error = None
+
     if start == destination:
 
-        st.warning(
+        st.session_state.route_error = (
             "Starting location and destination cannot be the same."
         )
 
@@ -172,65 +179,92 @@ if st.button(
 
         if route is None:
 
-            st.error(distance)
+            st.session_state.route_error = distance
 
         else:
 
-            st.success("Shortest route found!")
+            st.session_state.route = route
+            st.session_state.distance = distance
 
-            # ------------------------------------------
-            # ROUTE DISPLAY
-            # ------------------------------------------
 
-            st.subheader("🛣️ Shortest Route")
+# --------------------------------------------------
+# DISPLAY ROUTE RESULTS
+# --------------------------------------------------
 
-            route_text = " → ".join(route)
+if st.session_state.route_error:
 
-            st.markdown(
-                f"""
-                <div class="route-box">
-                    <div class="route-step">
-                        {route_text}
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    st.warning(st.session_state.route_error)
 
-            # ------------------------------------------
-            # DISTANCE
-            # ------------------------------------------
 
-            st.metric(
-                label="📏 Total Distance",
-                value=f"{distance} m"
-            )
+elif st.session_state.route is not None:
 
-            # ------------------------------------------
-            # STEP-BY-STEP ROUTE
-            # ------------------------------------------
+    route = st.session_state.route
+    distance = st.session_state.distance
 
-            st.subheader("📌 Step-by-Step Navigation")
+    st.success("Shortest route found!")
 
-            for i, location in enumerate(route):
+    # ------------------------------------------
+    # ROUTE DISPLAY
+    # ------------------------------------------
 
-                if i == 0:
+    st.subheader("🛣️ Shortest Route")
 
-                    st.write(
-                        f"🟢 **Start:** {location}"
-                    )
+    route_text = " → ".join(route)
 
-                elif i == len(route) - 1:
+    st.markdown(
+        f"""
+        <div class="route-box">
+            <div class="route-step">
+                {route_text}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-                    st.write(
-                        f"🔴 **Destination:** {location}"
-                    )
+    # ------------------------------------------
+    # DISTANCE
+    # ------------------------------------------
 
-                else:
+    st.metric(
+        label="📏 Total Distance",
+        value=f"{distance} m"
+    )
 
-                    st.write(
-                        f"➡️ {location}"
-                    )
+    # ------------------------------------------
+    # STEP-BY-STEP ROUTE
+    # ------------------------------------------
+
+    st.subheader("📌 Step-by-Step Navigation")
+
+    for i, location in enumerate(route):
+
+        if i == 0:
+
+            st.write(f"🟢 **Start:** {location}")
+
+        elif i == len(route) - 1:
+
+            st.write(f"🔴 **Destination:** {location}")
+
+        else:
+
+            st.write(f"➡️ {location}")
+
+    # ------------------------------------------
+    # CAMPUS MAP
+    # ------------------------------------------
+
+    st.divider()
+
+    st.subheader("🗺️ Campus Route Map")
+
+    st.write(
+        "The map displays campus locations and "
+        "highlights your calculated shortest route."
+    )
+
+    display_campus_map(route)
 
 
 # --------------------------------------------------
@@ -247,26 +281,19 @@ selected_location = st.selectbox(
     key="location_information"
 )
 
-
 location_info = locations[selected_location]
 
-
 info_col1, info_col2 = st.columns(2)
-
 
 with info_col1:
 
     st.write("### 📍 Location")
-
     st.write(selected_location)
-
 
 with info_col2:
 
     st.write("### 🏷️ Type")
-
     st.write(location_info["type"])
-
 
 st.write("### ℹ️ Description")
 
@@ -282,5 +309,6 @@ st.write(description)
 st.divider()
 
 st.caption(
-    "Smart Campus Navigation System • Powered by Dijkstra's Shortest Path Algorithm"
+    "Smart Campus Navigation System • Powered by "
+    "Dijkstra's Shortest Path Algorithm"
 )
