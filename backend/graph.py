@@ -86,12 +86,12 @@ graph = {
     ],
 
     "Chanakya Block": [
-        ("Chanakya Tuckshop",5),
-        ("KP Nautiyal Block",0)
+        ("Chanakya Tuckshop",1),
+        ("KP Nautiyal Block",5)
     ],
 
     "KP Nautiyal Block": [
-        ("Chanakya Block",0),
+        ("Chanakya Block",5),
         ("Chanakya Tuckshop",5)
     ],
 
