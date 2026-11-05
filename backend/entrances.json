@@ -1,0 +1,214 @@
+{
+    "Admin Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.26749989672916,
+            "lon": 77.9951093902775
+        }
+    ],
+    "Main Gate": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.268526133897815,
+            "lon": 77.99477359806654
+        }
+    ],
+    "B-tech Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.26746746467989,
+            "lon": 77.9950820023126
+        }
+    ],
+    "Santoshanand Library": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.26740491712606,
+            "lon": 77.99566142584736
+        }
+    ],
+    "Gate 2": [
+        {
+            "label": "Entrance 2",
+            "lat": 30.26866049372615,
+            "lon": 77.99789034470004
+        }
+    ],
+    "Gate 3": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.268336176585347,
+            "lon": 77.99385898771196
+        }
+    ],
+    "CSIT Tuckshop": [
+        {
+            "label": "Entrance 2",
+            "lat": 30.269297542133554,
+            "lon": 77.99301189492458
+        }
+    ],
+    "Chanakya Tuckshop": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.26786128169617,
+            "lon": 77.99690648928534
+        }
+    ],
+    "B-tech Tuckshop": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.268343126249587,
+            "lon": 77.99509333337848
+        }
+    ],
+    "Ravi Canteen": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.267305304272856,
+            "lon": 77.99453470996308
+        }
+    ],
+    "CSIT Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.26863501170388,
+            "lon": 77.99342510053319
+        },
+        {
+            "label": "Entrance 2",
+            "lat": 30.269209513872504,
+            "lon": 77.99312997060548
+        },
+        {
+            "label": "Entrance 3",
+            "lat": 30.268987126335055,
+            "lon": 77.99338753854238
+        }
+    ],
+    "Chanakya Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.2676504739604,
+            "lon": 77.99691127597372
+        }
+    ],
+    "KP Nautiyal Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.267877497657093,
+            "lon": 77.9968254358013
+        }
+    ],
+    "Old MCA Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.267701438509455,
+            "lon": 77.99633999943764
+        },
+        {
+            "label": "Entrance 2",
+            "lat": 30.267523062472076,
+            "lon": 77.99631104520665
+        }
+    ],
+    "Mechanical Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.267946994602166,
+            "lon": 77.99611452712122
+        }
+    ],
+    "Civil Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.266881369371944,
+            "lon": 77.99529395372838
+        }
+    ],
+    "Electrical Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.267277505319043,
+            "lon": 77.99619308017165
+        }
+    ],
+    "Paramedical Block": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.269316074388968,
+            "lon": 77.99294441924476
+        }
+    ],
+    "Convocation Centre": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.268945428615723,
+            "lon": 77.99482512512225
+        },
+        {
+            "label": "Entrance 2",
+            "lat": 30.269468965362755,
+            "lon": 77.99520074503022
+        }
+    ],
+    "Aryabhatta Lab": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.267682905949215,
+            "lon": 77.99566122668476
+        }
+    ],
+    "Param Lab": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.26744198234796,
+            "lon": 77.995975210318
+        }
+    ],
+    "Happiness Cafe": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.267210324481496,
+            "lon": 77.9947844177903
+        }
+    ],
+    "Quick Bite Cafe": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.267877497657093,
+            "lon": 77.9963292200206
+        }
+    ],
+    "Main Ground": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.267787151554984,
+            "lon": 77.99405250350564
+        },
+        {
+            "label": "Entrance 2",
+            "lat": 30.267750086463387,
+            "lon": 77.99481984131765
+        },
+        {
+            "label": "Entrance 3",
+            "lat": 30.26755086135635,
+            "lon": 77.99447105140308
+        }
+    ],
+    "Basketball Court": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.26711071143087,
+            "lon": 77.99584382159266
+        }
+    ],
+    "Badminton Court": [
+        {
+            "label": "Entrance 1",
+            "lat": 30.266886002550144,
+            "lon": 77.99512503225438
+        }
+    ]
+}
