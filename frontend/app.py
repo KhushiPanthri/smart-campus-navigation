@@ -2,12 +2,24 @@
 import streamlit as st
 import sys
 import os
+import html
 
-sys.path.append(
-    os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "backend")
+
+# --------------------------------------------------
+# BACKEND IMPORTS
+# --------------------------------------------------
+
+BACKEND_PATH = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "backend"
     )
 )
+
+if BACKEND_PATH not in sys.path:
+    sys.path.insert(0, BACKEND_PATH)
+
 
 from algorithms import find_shortest_route, search_locations
 from data import locations
@@ -22,7 +34,8 @@ from campus_map import display_campus_map
 st.set_page_config(
     page_title="Smart Campus Navigation",
     page_icon="🏫",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 
@@ -47,32 +60,158 @@ if "route_error" not in st.session_state:
 st.markdown(
     """
     <style>
-    .main-title {
-        font-size: 42px;
-        font-weight: 700;
-        text-align: center;
+
+    /* Main page */
+
+    .stApp {
+        background-color: #f3f6fb;
+    }
+
+    .block-container {
+        max-width: 100%;
+        padding: 1rem 1.5rem 2rem 1.5rem;
+    }
+
+    /* Navigation header */
+
+    .nav-header {
+        background: linear-gradient(
+            110deg,
+            #102b50,
+            #174b7a
+        );
+
+        padding: 18px 25px;
+        border-radius: 14px;
+        color: white;
+        margin-bottom: 18px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        box-shadow: 0 5px 18px rgba(15, 40, 75, 0.16);
+    }
+
+    .nav-title {
+        font-size: 27px;
+        font-weight: 750;
+        letter-spacing: 0.2px;
+    }
+
+    .nav-subtitle {
+        font-size: 13px;
+        color: #d6e4f5;
+        margin-top: 3px;
+    }
+
+    .nav-status {
+        background: rgba(255,255,255,0.13);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 8px 13px;
+        border-radius: 20px;
+        font-size: 12px;
+    }
+
+    /* Route panel */
+
+    .panel-heading {
+        color: #183657;
+        font-size: 21px;
+        font-weight: 750;
+        margin-bottom: 4px;
+    }
+
+    .panel-caption {
+        color: #718096;
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+
+    div.st-key-route_panel {
+        background: white;
+        padding: 18px;
+        border-radius: 14px;
+        border: 1px solid #e0e7f0;
+        box-shadow: 0 4px 15px rgba(25, 50, 80, 0.07);
+    }
+
+    /* Input fields */
+
+    div[data-baseweb="select"] > div {
+        border-radius: 9px;
+    }
+
+    /* Buttons */
+
+    .stButton > button {
+        border-radius: 9px;
+        font-weight: 650;
+        min-height: 43px;
+    }
+
+    /* Map heading */
+
+    .map-heading {
+        color: #183657;
+        font-size: 20px;
+        font-weight: 750;
         margin-bottom: 5px;
     }
 
-    .subtitle {
-        text-align: center;
-        font-size: 18px;
-        color: #666;
-        margin-bottom: 30px;
+    .map-caption {
+        color: #718096;
+        font-size: 13px;
+        margin-bottom: 10px;
     }
 
-    .route-box {
-        padding: 20px;
+    /* Route result */
+
+    .result-card {
+        background: white;
+        border: 1px solid #e0e7f0;
         border-radius: 12px;
-        border: 1px solid #ddd;
-        margin-top: 20px;
+        padding: 15px;
+        margin-top: 14px;
     }
 
-    .route-step {
-        font-size: 18px;
-        font-weight: 500;
-        padding: 8px;
+    .result-label {
+        color: #718096;
+        font-size: 12px;
+        margin-bottom: 5px;
     }
+
+    .result-value {
+        color: #183657;
+        font-size: 24px;
+        font-weight: 750;
+    }
+
+    .route-stop {
+        background: #f4f7fb;
+        border-left: 3px solid #2475c5;
+        padding: 9px 12px;
+        margin: 7px 0;
+        border-radius: 5px;
+        color: #243b53;
+        font-size: 14px;
+    }
+
+    /* Section headings */
+
+    h2, h3 {
+        color: #183657;
+    }
+
+    /* Footer */
+
+    .footer {
+        color: #7b8794;
+        text-align: center;
+        font-size: 12px;
+        padding: 18px;
+    }
+
     </style>
     """,
     unsafe_allow_html=True
@@ -80,191 +219,218 @@ st.markdown(
 
 
 # --------------------------------------------------
-# TITLE
+# NAVIGATION HEADER
+# --------------------------------------------------
+
+# --------------------------------------------------
+# NAVIGATION HEADER
 # --------------------------------------------------
 
 st.markdown(
-    '<div class="main-title">🏫 Smart Campus Navigation</div>',
+    """
+    <div class="nav-header">
+        <div>
+            <div class="nav-title">
+                🏫 Smart Campus Navigation
+            </div>
+            <div class="nav-subtitle">
+                Explore the campus. Find your way.
+            </div>
+        </div>
+        <div class="nav-status">
+            ● Campus Map
+        </div>
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
-st.markdown(
-    '<div class="subtitle">Find the shortest route between campus locations</div>',
-    unsafe_allow_html=True
+
+# --------------------------------------------------
+# MAIN LAYOUT
+# Map gets most of the available width.
+# --------------------------------------------------
+
+panel_col, map_col = st.columns(
+    [1, 3],
+    gap="large"
 )
 
-
-# --------------------------------------------------
-# SIDEBAR
-# --------------------------------------------------
-
-st.sidebar.title("🔎 Campus Search")
-
-search_term = st.sidebar.text_input(
-    "Search for a location",
-    placeholder="Example: Library"
-)
-
-if search_term:
-
-    search_results = search_locations(
-        locations.keys(),
-        search_term
-    )
-
-    if search_results:
-
-        st.sidebar.success(
-            f"{len(search_results)} location(s) found"
-        )
-
-        for location in search_results:
-            st.sidebar.write(f"📍 **{location}**")
-
-    else:
-        st.sidebar.warning("No matching location found.")
-
-
-# --------------------------------------------------
-# NAVIGATION SECTION
-# --------------------------------------------------
-
-st.subheader("📍 Find Your Route")
 
 location_names = list(locations.keys())
 
-col1, col2 = st.columns(2)
-
-with col1:
-    start = st.selectbox(
-        "Starting Location",
-        location_names
-    )
-
-with col2:
-    destination = st.selectbox(
-        "Destination",
-        location_names,
-        index=1 if len(location_names) > 1 else 0
-    )
-
 
 # --------------------------------------------------
-# FIND ROUTE BUTTON
+# ROUTE SEARCH PANEL
 # --------------------------------------------------
 
-if st.button(
-    "🔍 Find Shortest Route",
-    use_container_width=True
-):
+with panel_col:
 
-    # Clear previous result
-    st.session_state.route = None
-    st.session_state.distance = None
-    st.session_state.route_error = None
+    with st.container(key="route_panel"):
 
-    if start == destination:
-
-        st.session_state.route_error = (
-            "Starting location and destination cannot be the same."
+        st.markdown(
+            '<div class="panel-heading">Plan Your Route</div>',
+            unsafe_allow_html=True
         )
 
-    else:
-
-        route, distance = find_shortest_route(
-            graph,
-            start,
-            destination
+        st.markdown(
+            '<div class="panel-caption">Choose starting point and destination.</div>',
+            unsafe_allow_html=True
         )
 
-        if route is None:
+        start = st.selectbox(
+            "Starting location",
+            location_names,
+            key="start_location"
+        )
 
-            st.session_state.route_error = distance
+        destination = st.selectbox(
+            "Destination",
+            location_names,
+            index=1 if len(location_names) > 1 else 0,
+            key="destination_location"
+        )
+
+        find_route = st.button(
+            "🔍 Find Walking Route",
+            use_container_width=True,
+            type="primary"
+        )
+
+        if find_route:
+
+            st.session_state.route = None
+            st.session_state.distance = None
+            st.session_state.route_error = None
+
+            if start == destination:
+
+                st.session_state.route_error = (
+                    "Starting location and destination cannot be the same."
+                )
+
+            else:
+
+                route, distance = find_shortest_route(
+                    graph,
+                    start,
+                    destination
+                )
+
+                if route is None:
+
+                    st.session_state.route_error = distance
+
+                else:
+
+                    st.session_state.route = route
+                    st.session_state.distance = distance
+
+        # ------------------------------------------
+        # ROUTE SEARCH
+        # ------------------------------------------
+
+        st.divider()
+
+        st.markdown("**Quick Location Search**")
+            
+        quick_location = st.selectbox(
+
+            "Select a campus location",
+            ["Choose a location"] + location_names,
+            key="quick_location",
+            label_visibility="collapsed"
+        )
+        
+        if quick_location != "Choose a location":
+            st.info(f"📍 Selected: {quick_location}")
+            location_info = locations[quick_location]
+            st.write(f"**Type:** {location_info['type']}")
+            st.write(location_info["description"])
+
+        # ------------------------------------------
+        # ROUTE ERRORS
+        # ------------------------------------------
+
+        if st.session_state.route_error:
+
+            st.error(
+                st.session_state.route_error
+            )
+
+        # ------------------------------------------
+        # ROUTE SUMMARY
+        # ------------------------------------------
+
+        if st.session_state.route is not None:
+
+            st.divider()
+
+            st.success("Shortest route found!")
+
+            st.markdown("**Your Route**")
+
+            for index, location in enumerate(
+                st.session_state.route
+            ):
+
+                safe_location = html.escape(location)
+
+                if index == 0:
+
+                    st.markdown(
+                        f'<div class="route-stop">🟢 <b>Start:</b> {safe_location}</div>',
+                        unsafe_allow_html=True
+                    )
+
+                elif index == len(st.session_state.route) - 1:
+
+                    st.markdown(
+                        f'<div class="route-stop">🔴 <b>Destination:</b> {safe_location}</div>',
+                        unsafe_allow_html=True
+                    )
+
+                else:
+
+                    st.markdown(
+                        f'<div class="route-stop">➡️ {safe_location}</div>',
+                        unsafe_allow_html=True
+                    )
+
+            st.metric(
+                "Total Dijkstra Distance",
+                f"{st.session_state.distance} m"
+            )
 
         else:
 
-            st.session_state.route = route
-            st.session_state.distance = distance
+            st.divider()
+
+            st.caption(
+                " "
+            )
 
 
 # --------------------------------------------------
-# DISPLAY ROUTE RESULTS
+# CAMPUS MAP
+# Visible even before route selection.
 # --------------------------------------------------
 
-if st.session_state.route_error:
-
-    st.warning(st.session_state.route_error)
-
-
-elif st.session_state.route is not None:
-
-    route = st.session_state.route
-    distance = st.session_state.distance
-
-    st.success("Shortest route found!")
-
-    # ------------------------------------------
-    # ROUTE DISPLAY
-    # ------------------------------------------
-
-    st.subheader("🛣️ Shortest Route")
-
-    route_text = " → ".join(route)
+with map_col:
 
     st.markdown(
-        f"""
-        <div class="route-box">
-            <div class="route-step">
-                {route_text}
-            </div>
-        </div>
-        """,
+        '<div class="map-heading">🗺️ Campus Map</div>',
         unsafe_allow_html=True
     )
 
-    # ------------------------------------------
-    # DISTANCE
-    # ------------------------------------------
-
-    st.metric(
-        label="📏 Total Distance",
-        value=f"{distance} m"
+    st.markdown(
+        '<div class="map-caption">Explore campus locations and view your calculated walking route.</div>',
+        unsafe_allow_html=True
     )
 
-    # ------------------------------------------
-    # STEP-BY-STEP ROUTE
-    # ------------------------------------------
+    current_route = st.session_state.route
 
-    st.subheader("📌 Step-by-Step Navigation")
-
-    for i, location in enumerate(route):
-
-        if i == 0:
-
-            st.write(f"🟢 **Start:** {location}")
-
-        elif i == len(route) - 1:
-
-            st.write(f"🔴 **Destination:** {location}")
-
-        else:
-
-            st.write(f"➡️ {location}")
-
-    # ------------------------------------------
-    # CAMPUS MAP
-    # ------------------------------------------
-
-    st.divider()
-
-    st.subheader("🗺️ Campus Route Map")
-
-    st.write(
-        "The map displays campus locations and "
-        "highlights your calculated shortest route."
-    )
-
-    display_campus_map(route)
+    display_campus_map(current_route)
 
 
 # --------------------------------------------------
@@ -273,10 +439,10 @@ elif st.session_state.route is not None:
 
 st.divider()
 
-st.subheader("📖 Campus Location Information")
+st.subheader("📍 Campus Location Details")
 
 selected_location = st.selectbox(
-    "Select a location to view details",
+    "Select a campus location",
     location_names,
     key="location_information"
 )
@@ -287,28 +453,29 @@ info_col1, info_col2 = st.columns(2)
 
 with info_col1:
 
-    st.write("### 📍 Location")
+    st.markdown("**Location**")
     st.write(selected_location)
 
 with info_col2:
 
-    st.write("### 🏷️ Type")
+    st.markdown("**Facility Type**")
     st.write(location_info["type"])
 
-st.write("### ℹ️ Description")
-
-description = location_info["description"]
-
-st.write(description)
+st.markdown("**Description**")
+st.write(location_info["description"])
 
 
 # --------------------------------------------------
 # FOOTER
 # --------------------------------------------------
 
-st.divider()
-
-st.caption(
-    "Smart Campus Navigation System • Powered by "
-    "Dijkstra's Shortest Path Algorithm"
+st.markdown(
+    """
+    <div class="footer">
+        Smart Campus Navigation System
+        &nbsp;•&nbsp;
+        Team Syntax Squad
+    </div>
+    """,
+    unsafe_allow_html=True
 )
